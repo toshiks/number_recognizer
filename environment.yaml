@@ -16,3 +16,4 @@ dependencies:
   - torchvision=0.7.0
   - pip:
     - pre-commit==1.21.0
+    - num2words==0.5.10
