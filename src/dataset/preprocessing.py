@@ -23,17 +23,10 @@ class LogMelSpectrogram(nn.Module):
 
 
 class Augmentation:
-    def __init__(self, is_validation: bool = False, sample_rate: int = 8000, n_mels: int = 128):
-        possible_transforms = [
-            torchaudio.transforms.MelSpectrogram(sample_rate=sample_rate, n_mels=n_mels)
-        ]
-
-        if not is_validation:
-            possible_transforms.append(torchaudio.transforms.FrequencyMasking(freq_mask_param=15))
-            possible_transforms.append(torchaudio.transforms.TimeMasking(time_mask_param=15))
-
+    def __init__(self):
         self.transforms = nn.Sequential(
-            *possible_transforms
+            torchaudio.transforms.FrequencyMasking(freq_mask_param=15),
+            torchaudio.transforms.TimeMasking(time_mask_param=15)
         )
 
     def __call__(self, waveform: torch.Tensor) -> torch.Tensor:
@@ -48,7 +41,7 @@ class NumberToTextVec:
         alphabet = ' абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
         self._letter_to_index: Dict[str, int] = {}
         self._index_to_letter: Dict[int, str] = {}
-        for letter, index in enumerate(list(alphabet)):
+        for index, letter in enumerate(list(alphabet)):
             self._letter_to_index[letter] = index
             self._index_to_letter[index] = letter
 
