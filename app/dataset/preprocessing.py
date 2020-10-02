@@ -1,11 +1,11 @@
-from typing import Dict
-
 import numpy as np
 
 import torch
 import torch.nn as nn
 import torchaudio
 import num2words as n2w
+
+from dataset.utils import get_index_to_letter_map, get_letter_to_index_map
 
 
 class LogMelSpectrogram(nn.Module):
@@ -38,12 +38,8 @@ class NumberToTextVec:
     Convert number to to feature vector
     """
     def __init__(self):
-        alphabet = ' абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
-        self._letter_to_index: Dict[str, int] = {}
-        self._index_to_letter: Dict[int, str] = {}
-        for index, letter in enumerate(list(alphabet)):
-            self._letter_to_index[letter] = index
-            self._index_to_letter[index] = letter
+        self._letter_to_index = get_letter_to_index_map()
+        self._index_to_letter = get_index_to_letter_map()
 
     @staticmethod
     def number_to_text(number: int) -> str:

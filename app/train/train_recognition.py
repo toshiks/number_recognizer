@@ -7,8 +7,9 @@ import pytorch_lightning as pl
 
 from typing import Tuple
 
+from omegaconf import DictConfig
 from pytorch_lightning.loggers import TensorBoardLogger
-from pytorch_lightning.callbacks import LearningRateLogger
+from pytorch_lightning.callbacks import LearningRateLogger, ModelCheckpoint
 
 from model import RecognitionModule
 from dataset import VoiceDataModule
@@ -18,8 +19,8 @@ class SpeechRecognitionTrainer(pl.LightningModule):
     def __init__(self, learning_rate: float, num_mels: int):
         super(SpeechRecognitionTrainer, self).__init__()
 
-        self.model = RecognitionModule(num_features=num_mels)
-        self.criterion = nn.CTCLoss()
+        self.model = RecognitionModule(num_features=num_mels, out_classes=35)
+        self.criterion = nn.CTCLoss(blank=34)
         self._learning_rate = learning_rate
 
     def forward(
@@ -29,8 +30,7 @@ class SpeechRecognitionTrainer(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = optim.Adam(self.model.parameters(), self._learning_rate)
-        scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.5, patience=5)
-        return [optimizer], [scheduler]
+        return [optimizer]
 
     def step(self, batch):
         spectrograms, labels, input_lengths, label_lengths = batch
@@ -43,34 +43,45 @@ class SpeechRecognitionTrainer(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         loss = self.step(batch)
         res = pl.TrainResult(loss)
-        res.log_dict({'train/loss': loss},
-                     prog_bar=True, logger=True, on_step=True)
+        res.log_dict({'loss_train': loss}, logger=True, on_step=True)
         return res
 
     def validation_step(self, batch, batch_idx):
         loss = self.step(batch)
         res = pl.EvalResult(checkpoint_on=loss)
-        res.log_dict({"val/loss": loss}, prog_bar=True, logger=True, on_epoch=True)
+        res.log_dict({"loss_val": loss}, prog_bar=True, logger=True, on_epoch=True)
         return res
 
 
-def main():
-    path_csv_dataset = ""
-    lr = 1e-3
-    datamodule = VoiceDataModule(4, path_csv_dataset, 128)
-    log_path = ""
-    speech_module = SpeechRecognitionTrainer(lr, 128)
-
-    logger = TensorBoardLogger(log_path, name="speech")
-    lr_logger = LearningRateLogger(logging_interval='step')
-    trainer = pl.Trainer(
-        max_epochs=3, gpus=0, distributed_backend=None,
-        logger=logger,
-        callbacks=[lr_logger]
+def train_model(cfg: DictConfig):
+    data_module = VoiceDataModule(
+        batch_size=cfg.train_config.batch_size,
+        path_csv_dataset=cfg.paths.csv_train,
+        num_mels=cfg.train_config.n_mels
     )
 
-    trainer.fit(speech_module, datamodule=datamodule)
+    speech_module = SpeechRecognitionTrainer(
+        learning_rate=cfg.train_config.lr,
+        num_mels=cfg.train_config.n_mels
+    )
 
+    logger = TensorBoardLogger(
+        save_dir=cfg.paths.log_path,
+        name="speech_recognition"
+    )
 
-if __name__ == '__main__':
-    main()
+    model_checkpoints = ModelCheckpoint(
+        filepath=cfg.paths.save_checkpoints,
+        prefix="spr_"
+    )
+
+    trainer = pl.Trainer(
+        max_epochs=cfg.train_config.max_epoches,
+        distributed_backend=None,
+        gpus=1,
+        logger=logger,
+        checkpoint_callback=model_checkpoints,
+        val_check_interval=1.0
+    )
+
+    trainer.fit(speech_module, datamodule=data_module)

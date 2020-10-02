@@ -17,3 +17,4 @@ dependencies:
   - pip:
     - pre-commit==1.21.0
     - num2words==0.5.10
+    - hydra-core==1.0.3

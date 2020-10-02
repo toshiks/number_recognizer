@@ -33,11 +33,16 @@ class VoiceDataModule(pl.LightningDataModule):
 
     def train_dataloader(self) -> DataLoader:
         return DataLoader(self._dataset_train, batch_size=self._batch_size, pin_memory=True,
-                          collate_fn=self._collate_sequences)
+                          collate_fn=self._collate_sequences, num_workers=4)
 
     def val_dataloader(self) -> DataLoader:
-        return DataLoader(self._dataset_val, batch_size=self._batch_size, pin_memory=True,
-                          collate_fn=partial(self._collate_sequences, is_val=True))
+        return DataLoader(
+            self._dataset_val,
+            batch_size=self._batch_size,
+            pin_memory=True,
+            collate_fn=partial(self._collate_sequences, is_val=True),
+            num_workers=4
+        )
 
     def _collate_sequences(self, batch, is_val: bool = False):
         spectrograms = []

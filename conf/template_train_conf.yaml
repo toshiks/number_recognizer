@@ -1,0 +1,16 @@
+paths:
+  csv_train: ""
+  save_checkpoints: ""
+  log_path: ""
+
+train_config:
+  lr: 1e-3
+  n_mels: 128
+  max_epoches: 30
+  batch_size: 16
+
+hydra:
+  output_subdir: null
+  job_logging: null
+  run:
+    dir: ./
