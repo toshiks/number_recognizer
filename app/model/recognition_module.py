@@ -7,7 +7,7 @@ from model.layers import InputConv1d, DenseDropoutBlock, NoLinearityBlock
 
 class RecognitionModule(nn.Module):
     def __init__(self, num_features: int, hidden_dense_size: int = 128,
-                 hidden_lstm_size: int = 1024, out_classes: int = 34):
+                 hidden_lstm_size: int = 1024, out_classes: int = 35):
         super(RecognitionModule, self).__init__()
         self._num_lstm_layers = 1
         self._hidden_lstm_size = hidden_lstm_size

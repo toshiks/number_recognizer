@@ -1,0 +1,14 @@
+dataset_path: "path to test-example.csv"
+
+model_config:
+  n_mels: 128  # It's the same as train_conf.yaml
+  path_to_graph: "path to graph model"
+
+
+hydra:
+  output_subdir: null
+  run:
+    dir: ./
+
+defaults:
+  - hydra/job_logging: stdout

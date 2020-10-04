@@ -56,5 +56,4 @@ class NumberToTextVec:
         return self.text_to_index_vector(NumberToTextVec.number_to_text(number))
 
     def index_vector_to_text(self, index_vector: np.array):
-
         return "".join([self._index_to_letter[i] for i in index_vector])

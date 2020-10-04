@@ -11,5 +11,4 @@ def main(cfg: DictConfig) -> None:
 
 
 if __name__ == '__main__':
-    hydra.output_subdir = None
     main()

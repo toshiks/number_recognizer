@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 
 from functools import partial
-from typing import Optional
 
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader, random_split
@@ -20,7 +19,7 @@ class VoiceDataModule(pl.LightningDataModule):
         self._augment = Augmentation()
         self._num_mels = num_mels
 
-    def setup(self, stage: Optional[str] = None):
+    def prepare_data(self):
         dataset = VoiceDataset(path_csv_dataset=self._path_csv_dataset, num_mels=self._num_mels)
         length_dataset = len(dataset)
         train_length_dataset = int(length_dataset * 0.8)

@@ -1,7 +1,7 @@
 paths:
-  csv_train: ""
-  save_checkpoints: ""
-  log_path: ""
+  csv_train: "path to train.csv"
+  save_checkpoints: "path folder for saving checkpoints"
+  log_path: "path folder for saving tensorboard logs"
 
 train_config:
   lr: 1e-3
@@ -11,6 +11,8 @@ train_config:
 
 hydra:
   output_subdir: null
-  job_logging: null
   run:
     dir: ./
+
+defaults:
+  - hydra/job_logging: stdout
