@@ -6,8 +6,8 @@ from functools import partial
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader, random_split
 
-from dataset import VoiceDataset
-from dataset.preprocessing import Augmentation
+from .voice_dataset import VoiceDataset
+from .preprocessing import Augmentation
 
 
 class VoiceDataModule(pl.LightningDataModule):

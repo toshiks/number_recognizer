@@ -5,7 +5,7 @@ import torch.nn as nn
 import torchaudio
 import num2words as n2w
 
-from dataset.utils import get_index_to_letter_map, get_letter_to_index_map
+from .utils import get_index_to_letter_map, get_letter_to_index_map
 
 
 class LogMelSpectrogram(nn.Module):

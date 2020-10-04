@@ -11,9 +11,9 @@ from omegaconf import DictConfig
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 
-from model import RecognitionModule, CTCDecoder
-from dataset import VoiceDataModule, get_blank_id, get_alphabet
-from metrics import CerWer
+from app.model import RecognitionModule, CTCDecoder
+from app.dataset import VoiceDataModule, get_blank_id, get_alphabet
+from app.metrics import CerWer
 
 
 class SpeechRecognitionTrainer(pl.LightningModule):

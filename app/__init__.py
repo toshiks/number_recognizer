@@ -1,2 +1,2 @@
-from .train import train_model
-from .test import RecognizeNumbers
+from app.train import train_model
+from app.test import RecognizeNumbers

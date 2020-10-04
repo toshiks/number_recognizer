@@ -4,9 +4,9 @@ import pandas as pd
 import torch
 import torchaudio
 
-from dataset import get_alphabet, get_blank_id, text_to_number, get_index_to_letter_map
-from dataset.preprocessing import LogMelSpectrogram
-from model import CTCDecoder, RecognitionModule
+from app.dataset import get_alphabet, get_blank_id, text_to_number, get_index_to_letter_map
+from app.dataset.preprocessing import LogMelSpectrogram
+from app.model import CTCDecoder, RecognitionModule
 
 
 class RecognizeNumbers:

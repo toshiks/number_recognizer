@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 from typing import Tuple
-from model.layers import InputConv1d, DenseDropoutBlock, NoLinearityBlock
+from .layers import InputConv1d, DenseDropoutBlock, NoLinearityBlock
 
 
 class RecognitionModule(nn.Module):

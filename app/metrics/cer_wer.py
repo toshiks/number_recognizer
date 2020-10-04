@@ -2,8 +2,7 @@ import editdistance
 import numpy as np
 
 from pytorch_lightning.metrics import NumpyMetric
-
-from dataset.utils import get_index_to_letter_map
+from app.dataset.utils import get_index_to_letter_map
 
 
 class CerWer(NumpyMetric):
