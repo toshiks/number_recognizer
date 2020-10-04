@@ -101,10 +101,15 @@ def train_model(cfg: DictConfig):
         save_weights_only=True
     )
 
+    if cfg.train_config.device == "cpu":
+        gpus = 0
+    else:
+        gpus = 1
+
     trainer = pl.Trainer(
         max_epochs=cfg.train_config.max_epoches,
         distributed_backend=None,
-        gpus=1,
+        gpus=gpus,
         logger=logger,
         checkpoint_callback=model_checkpoints,
         val_check_interval=1.0

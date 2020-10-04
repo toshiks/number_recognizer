@@ -8,6 +8,7 @@ train_config:
   n_mels: 128
   max_epoches: 30
   batch_size: 16
+  device: "cuda:0"  # cpu or cuda
 
 hydra:
   output_subdir: null

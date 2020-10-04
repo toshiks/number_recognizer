@@ -10,12 +10,12 @@ from app.model import CTCDecoder, RecognitionModule
 
 
 class RecognizeNumbers:
-    def __init__(self, path_to_graph, num_mels):
+    def __init__(self, path_to_graph, num_mels, device):
         alphabet = list(get_alphabet())
         blank_id = get_blank_id()
 
         self._index_to_letter_map = get_index_to_letter_map()
-        self._device = 'cuda:0'
+        self._device = device
         self._model = self._load_model(path_to_graph, num_mels, len(alphabet)).to(self._device)
         self._decoder = CTCDecoder(blank_id=blank_id, alphabet=alphabet)
         self._transform = LogMelSpectrogram(n_mels=num_mels)
@@ -23,7 +23,7 @@ class RecognizeNumbers:
     @staticmethod
     def _load_model(path_to_graph, num_mels, num_classes):
         model = RecognitionModule(num_mels, out_classes=num_classes)
-        state_dict = torch.load(path_to_graph)['state_dict']
+        state_dict = torch.load(path_to_graph, map_location='cpu')['state_dict']
         model.load_state_dict({i.replace('model.', ''): j for i, j in state_dict.items()})
 
         return model
